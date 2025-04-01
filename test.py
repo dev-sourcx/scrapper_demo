@@ -1,29 +1,36 @@
 import streamlit as st
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
-from webdriver_manager.firefox import GeckoDriverManager
 
-# Setup options for headless Firefox
-options = Options()
-options.add_argument("--headless")  # Run Firefox in headless mode
+"""
+## Web scraping on Streamlit Cloud with Selenium
 
-# Automatically handle the download and installation of geckodriver using webdriver_manager
-service = Service(GeckoDriverManager().install())
+[![Source](https://img.shields.io/badge/View-Source-<COLOR>.svg)](https://github.com/snehankekre/streamlit-selenium-chrome/)
 
-# Initialize the driver with the headless options and service
-driver = webdriver.Firefox(
-    options=options,
-    service=service
-)
+This is a minimal, reproducible example of how to scrape the web with Selenium and Chrome on Streamlit's Community Cloud.
 
-# Visit the website
-URL = "https://www.example.com/"
-driver.get(URL)
+Fork this repo, and edit `/streamlit_app.py` to customize this app to your heart's desire. :heart:
+"""
 
-# Output the title of the webpage (for example)
-st.title("Selenium Test on Streamlit Cloud")
-st.write(f"Page title: {driver.title}")
+with st.echo():
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.chrome.service import Service
+    from webdriver_manager.chrome import ChromeDriverManager
+    from webdriver_manager.core.os_manager import ChromeType
 
-# Close the driver after usage
-driver.quit()
+    @st.cache_resource
+    def get_driver():
+        return webdriver.Chrome(
+            service=Service(
+                ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+            ),
+            options=options,
+        )
+
+    options = Options()
+    options.add_argument("--disable-gpu")
+    options.add_argument("--headless")
+
+    driver = get_driver()
+    driver.get("http://example.com")
+
+    st.code(driver.page_source)
