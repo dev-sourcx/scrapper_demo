@@ -53,7 +53,10 @@ def scrape_linkden_profile(Cookie, search_url):
     options.add_argument("--disable-gpu")  # Disable GPU acceleration (often recommended for headless)
     options.add_argument("--no-sandbox")  # Overcome limited resource problems
     options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options = options)
+    options.add_argument("--remote-debugging-port=9222")  # Enables debugging
+    options.add_argument("--disable-blink-features=AutomationControlled")  # Bypass bot detection
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
     # Open LinkedIn and set the cookie
     driver.get("https://www.linkedin.com/")
     driver.set_page_load_timeout(1000)
