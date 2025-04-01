@@ -17,6 +17,7 @@ from urllib.parse import urlparse
 # from serpapi import GoogleSearch
 from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 
 def scrape_linkden_profile(Cookie, search_url):
     def get_linkedin_about_url(url):
@@ -52,7 +53,7 @@ def scrape_linkden_profile(Cookie, search_url):
     options.add_argument("--disable-gpu")  # Disable GPU acceleration (often recommended for headless)
     options.add_argument("--no-sandbox")  # Overcome limited resource problems
     options.add_argument("--disable-dev-shm-usage")  # Overcome limited resource problems
-    driver = webdriver.Chrome(options = options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options = options)
     # Open LinkedIn and set the cookie
     driver.get("https://www.linkedin.com/")
     driver.set_page_load_timeout(1000)
